@@ -1,0 +1,227 @@
+#include <Servo.h>
+
+int pos = 0;
+
+
+Servo servo_9;
+Servo servo_10;
+Servo servo_11;
+
+void setup()
+{
+  servo_9.attach(9);
+  servo_10.attach(10);
+  servo_11.attach(11);
+
+}
+
+void loop()
+{
+  // sweep the servo from 0 to 180 degrees in steps
+  // of 1 degrees
+  for (pos = 0; pos <= 180; pos += 1) {
+    // tell servo to go to position in variable 'pos'
+    servo_9.write(pos);
+    // wait 15 ms for servo to reach the position
+    delay(15); // Wait for 15 millisecond(s)
+    servo_10.write(pos);
+    delay(15);
+    servo_11.write(pos);
+    delay(15);
+  }
+  for (pos = 180; pos >= 0; pos -= 1) {
+    // tell servo to go to position in variable 'pos'
+    servo_9.write(pos);
+    // wait 15 ms for servo to reach the position
+    delay(15); // Wait for 15 millisecond(s)
+    servo_10.write(pos);
+    delay(15);
+    servo_11.write(pos);
+    delay(15);
+  }
+}
+
+
+
+
+// Motor A connections
+int enA = 9;
+int in1 = 8;
+int in2 = 7;
+// Motor B connections
+int enB = 3;
+int in3 = 5;
+int in4 = 4;
+
+void setup() {
+	// Set all the motor control pins to outputs
+	pinMode(enA, OUTPUT);
+	pinMode(enB, OUTPUT);
+	pinMode(in1, OUTPUT);
+	pinMode(in2, OUTPUT);
+	pinMode(in3, OUTPUT);
+	pinMode(in4, OUTPUT);
+	
+	// Turn off motors - Initial state
+	digitalWrite(in1, LOW);
+	digitalWrite(in2, LOW);
+	digitalWrite(in3, LOW);
+	digitalWrite(in4, LOW);
+}
+
+void loop() {
+	directionControl();
+	delay(1000);
+	speedControl();
+	delay(1000);
+}
+
+// This function lets you control spinning direction of motors
+void directionControl() {
+	// Set motors to maximum speed
+	// For PWM maximum possible values are 0 to 255
+	analogWrite(enA, 255);
+	analogWrite(enB, 255);
+
+	// Turn on motor A & B
+	digitalWrite(in1, HIGH);
+	digitalWrite(in2, LOW);
+	digitalWrite(in3, HIGH);
+	digitalWrite(in4, LOW);
+	delay(2000);
+	
+	// Now change motor directions
+	digitalWrite(in1, LOW);
+	digitalWrite(in2, HIGH);
+	digitalWrite(in3, LOW);
+	digitalWrite(in4, HIGH);
+	delay(2000);
+	
+	// Turn off motors
+	digitalWrite(in1, LOW);
+	digitalWrite(in2, LOW);
+	digitalWrite(in3, LOW);
+	digitalWrite(in4, LOW);
+}
+
+// This function lets you control speed of the motors
+void speedControl() {
+	// Turn on motors
+	digitalWrite(in1, LOW);
+	digitalWrite(in2, HIGH);
+	digitalWrite(in3, LOW);
+	digitalWrite(in4, HIGH);
+	
+	// Accelerate from zero to maximum speed
+	for (int i = 0; i < 256; i++) {
+		analogWrite(enA, i);
+		analogWrite(enB, i);
+		delay(20);
+	}
+	
+	// Decelerate from maximum speed to zero
+	for (int i = 255; i >= 0; --i) {
+		analogWrite(enA, i);
+		analogWrite(enB, i);
+		delay(20);
+	}
+	
+	// Now turn off motors
+	digitalWrite(in1, LOW);
+	digitalWrite(in2, LOW);
+	digitalWrite(in3, LOW);
+	digitalWrite(in4, LOW);
+}
+
+
+
+
+
+const double beltvel=0.4 					// belt velocity in m/s
+const double irdistl=0.8					// distance of IR sensor in meters from left belt
+const double irdistr=1.8					// distance of IR sensor in meters from right belt
+
+int irsig = 8;
+str barsig;
+pushMotor11 = 6
+pushMotor12 = 7
+pushMotor21 = 4
+pushMotor22 = 5
+
+
+void setup()
+{
+	pinMode(irsig, INPUT);
+	pinMode(pushMotor11, OUTPUT);
+	pinMode(pushMotor21, OUTPUT);
+	pinMode(pushMotor12, OUTPUT);
+	pinMode(pushMotor22, OUTPUT);
+	Serial.begin(9600);	
+}
+
+void loop()
+{
+	if(digitalRead(irsig)==HIGH)
+	{
+		double t1=millis();
+		while(digitalRead(irsig)==HIGH)
+		{
+			barsig = Serial.read();
+			if (barsig != NULL)
+			{
+				str code = barsig;
+			}
+		}
+		double t2=millis();
+
+		double t = (t2 - t1)*1000;
+		double T1 = (irdistl - beltvel * t / 2) / beltvel         // T1 is in seconds
+		double T2 = (irdistr - beltvel * t / 2) / beltvel         // T2 is in seconds
+	}
+	
+	if (code == "LEFT")
+	{
+		delay(T1*1000);
+		start=millis();
+		while(millis() - start < 500)
+		{
+			digitalWrite(pushMotor11, HIGH);
+			digitalWrite(pushMotor21, LOW);
+		}
+
+		start=millis();
+		while(millis() - start < 500)
+		{
+			digitalWrite(pushMotor11, LOW);
+			digitalWrite(pushMotor21, HIGH);
+		}
+		digitalWrite(pushMotor21, LOW);
+		delay((T2-T1)*1000-1000);
+	}
+	else if (code == "RIGHT")
+	{	
+		delay(T2*1000);
+		start=millis();
+		while(millis() - start < 500)
+		{
+			digitalWrite(pushMotor22, HIGH);
+			digitalWrite(pushMotor21, LOW);
+		}
+
+		start=millis();
+		while(millis() - start < 500)
+		{
+			digitalWrite(pushMotor22, LOW);
+			digitalWrite(pushMotor21, HIGH);
+		}
+		digitalWrite(pushMotor21, LOW);
+	}
+	else
+	{
+		delay(T2*1000+1000);
+	{
+
+}
+
+
+
